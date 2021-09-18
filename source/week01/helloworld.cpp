@@ -4,6 +4,7 @@
 int main() {
 	
 	cout <<"Hello World!\n";
+	cout <<"Hello ebéd\n";
 
 	return 0;
 }
