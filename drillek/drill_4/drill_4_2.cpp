@@ -16,7 +16,7 @@ int main()
 		if (unit=="m"|| unit=="cm"|| unit=="in"|| unit=="ft")
 			{
 			cout<<"The number you've entered: "<<num_1 <<" The unit you've entered: "<<unit;
-			if (i>=3)
+			if (i>1)
 				{
 				if (num_1>maximum)
 					{
@@ -54,6 +54,7 @@ int main()
 			else if (i==1)
 				{
 				minimum=num_1;
+				maximum=num_1;
 				cout << " First Number\n";
 				if (unit=="m")
 					{
@@ -76,43 +77,11 @@ int main()
 					values.push_back(in*num_1);
 					}
 				}
-			else if (i==2)
-				{
-				if (num_1<minimum)
-					{
-						maximum=minimum;
-						minimum=num_1;
-					}
-				else
-					maximum=num_1;
-				cout<<" Second number\n";
-				if (unit=="m")
-					{
-					sum=sum+meter*num_1;
-					values.push_back(meter*num_1);
-					}
-				else if (unit=="cm")
-					{
-					sum=sum+centimeter*num_1;
-					values.push_back(centimeter*num_1);
-					}
-				else if (unit=="ft")
-					{
-					sum=sum+feet*num_1;
-					values.push_back(feet*num_1);
-					}
-				else if (unit=="in")
-					{
-					sum=sum+in*num_1;
-					values.push_back(in*num_1);
-					}
-				}
 			}
-
 		else
 			{
 			cout<<"Wrong unit type! Enter another number!\n";
-			--i;
+			if (i>1) --i;
 			}
 		++i;
 		}
