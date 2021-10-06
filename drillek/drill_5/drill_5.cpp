@@ -2,7 +2,7 @@
 int main()
 {
 	try {
-		string s = "ape"; bool c = "aa"<s; if (c) cout << "Success!\n";
+		cout << "Success!\n";
 		keep_window_open();
 		return 0;
 	}
@@ -26,17 +26,18 @@ cout << "Success!\n";  Nagy C, szintaxis hiba
 cout << "Success!\n";  Lemaradt egy ", szintaxis hiba
 
 3. cout << "Success" << !\n"	
-cout << "Success" << "!\n"  Lemaradt egy ", szintaxis hiba
+cout << "Success" << "!\n";  Lemaradt egy ", szintaxis hiba, illetve egy ; is lemaradt.
 
 4. cout << success << '\n';
-cout << "success" << '\n';  success szó nem egy változó, hanem string, kell ""
+cout << "Success" << '\n';  success szó nem egy változó, hanem string, kell "", és kell a nagy S és !.
 
 5. string res = 7; vector<int> v(10); v[5] = res; cout << "Success!\n";
 int res = 7; vector<int> v(10); v[5] = res; cout << "Success!\n";  Egy integert tároló vektorba csak integert tárolhatunk, 
 tehát a res int kell, hogy legyen, nem string
 
 6. vector<int> v(10); v(5) = 7; if (v(5)!=7) cout << "Success!\n";			
-vector<int> v(10); v[5] = 7; if (v[5]!=7) cout << "Success!\n";  Ha a vektor elemeire hivatkozunk  []-t kell használnunk
+vector<int> v(10); v[5] = 7; if (v[5]=7) cout << "Success!\n";  Ha a vektor elemeire hivatkozunk  []-t kell használnunk, illetve != helyett = kell,
+hogy igazat adjon vissza az if.
 
 7. if (cond) cout << "Success!\n"; else cout << "Fail!\n";
 if (true) cout << "Success!\n"; else cout << "Fail!\n";  cond nincs meghatározva, sem más változó, 
@@ -47,7 +48,7 @@ bool c = false; if (!c) cout << "Success!\n"; else cout << "Fail!\n";  Mivel a c
 ezért vagy meg kell változtatni a C-t, vagy negálni kell.
 
 9. string s = "ape"; boo c = "fool"<s; if (c) cout << "Success!\n";
-string s = "ape"; bool c = "aa"<s; if (c) cout << "Success!\n";  Boo-t ki kell javítani bool-ra, majd a "fool"-t ki kell cserélni valamilyen stringre,
+string s = "ape"; bool c = "apd"<s; if (c) cout << "Success!\n";  Boo-t ki kell javítani bool-ra, majd a "fool"-t ki kell cserélni valamilyen stringre,
 aminek a számértéke kisebb mint az "ape"-nek
 
 10. string s = "ape"; if (s=="fool") cout << "Success!\n";
@@ -102,7 +103,7 @@ string s = "Success!\n"; for (int i=0; i<=s.size(); ++i) cout << s[i];  Egy stri
 int i=0,j=9; while (i<10) ++i; if (j<i) cout << "Success!\n";  Nincs deklarálva j változó, azt deklarálni kell, a ciklusban pedig az i-t kell növelni.
 
 24. double x = 4; double d = 5/(x–2); if (d=2*(x/2)+0.5) cout << "Success!\n";
-ouble x = 4; double d=5/(x-2); if (d==(2*(x/4)+0.5)) cout << "Success!\n";
+double x = 4; double d=5/(x-2); if (d==(2*(x/4)+0.5)) cout << "Success!\n"; Az x–2-nél - jel kell, illetve alakítani kell a számokon, hogy igazat adjon az if.
 
 25. cin << "Success!\n";
 cout << "Success!\n";  Standard inputon nem lehet megadni stringet, ezért csak outputként működhet.
