@@ -88,6 +88,7 @@ Token Token_stream::get()  //Egy karakter bekérése az input streamből, majd a
 			return Token(name,s);
 			//Különféle föggvényekhez tartozó kulcsszólhoz Token rendelése
 		}
+		cin.putback(';');
 		error("Bad token");
 		
 	}
@@ -119,7 +120,9 @@ double get_value(string s)
 {
 	for (auto& v : names ) //Második logikai hiba, a változók megadásakor
 		if (v.name == s) return v.value;
+	cin.putback(';');
 	error("get: undefined name ",s);
+	
 	return 0; //Harmadik hiba, bár enélkül is lefordul a program, vissza kell térnünk az error után is valamivel.
 	//Ha kaptunk egy változót, megnézzük az benne van-e a változó táblában, ha igen visszaadjuk értéket, ha nem errort adunk.
 }
@@ -131,7 +134,9 @@ void set_value(string s, double d) //Változók újradeklarása
 			names[i].value = d;
 			return;
 		}
+	cin.putback(';');
 	error("set: undefined name ",s);
+	
 }
 
 bool is_declared(string s)  //Függvény arra, hogy ne tudjunk kétszer deklarálni egy változót.
@@ -164,6 +169,7 @@ double primary()
 		case name:
 			return get_value(t.name); //Változó értékének bekérése
 		default:
+			cin.putback(';');
 			error("primary expected");
 	}
 	return -1; //Negyedik hiba, bár enélkül is lefordul a program, vissza kell térnünk az error után is valamivel.
@@ -185,6 +191,14 @@ double term()  //Szorzás és osztás kezelése, errorkezelés
 				if (d == 0) error("divide by zero");
 				left /= d;
 				t=ts.get();
+				break;
+			}
+			case '%':
+			{
+				double d = primary();
+				if (d == 0) error("%: divide by zero");
+				left = fmod (left, d);
+				t = ts.get();
 				break;
 			}
 			default:
@@ -282,6 +296,7 @@ double statement() //Eldöntjük mit kaptunk, egy számot, változó deklarálá
 			double d=expression();
 			set_value(t1.name, d);
 		}
+		
 		else (error("Can't redeclar a variable if it wasn't declared in the first place."));
 
 		}

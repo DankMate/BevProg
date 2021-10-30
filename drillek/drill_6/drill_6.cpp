@@ -1,4 +1,5 @@
 #include "../../std_lib_facilities.h"
+
 //------------------------------------------------------------------------------
 
 class Token { //Első compile hiba, lemaradt a c betű a class-ból
@@ -9,7 +10,6 @@ public:
         :kind(ch), value(0) { }    
     Token(char ch, double val)     // make a Token from a char and a double
         :kind(ch), value(val) { }
-
 };
 
 //------------------------------------------------------------------------------
@@ -27,332 +27,173 @@ private:
 //------------------------------------------------------------------------------
 
 // The constructor just sets full to indicate that the buffer is empty:
-
 Token_stream::Token_stream()
-:full(false), buffer(0)    {} // no Token in buffer
-
-
+:full(false), buffer(0)    // no Token in buffer
+{
+}
 
 //------------------------------------------------------------------------------
-
-
 
 // The putback() member function puts its argument back into the Token_stream's buffer:
-
 void Token_stream::putback(Token t)
-
 {
-
     if (full) error("putback() into a full buffer");
-
     buffer = t;       // copy t to buffer
-
     full = true;      // buffer is now full
-
 }
 
-
-
 //------------------------------------------------------------------------------
-
-
 
 Token Token_stream::get() //Második compile hiba, a Token Stream classból akarjuk elérni a Get-et
-
 {
-
     if (full) {       // do we already have a Token ready?
-
         // remove token from buffer
-
         full=false;
-
         return buffer;
-
     } 
 
-
-
     char ch;
-
     cin >> ch;    // note that >> skips whitespace (space, newline, tab, etc.)
 
-
-
     switch (ch) {
-
-    case ';':    // for "print"
-
-    case 'q':    // for "quit"
-
+    case '=':    // for "print"
+    case 'x':    // for "quit"
     case '(': case ')': case '+': case '-': case '*': case '/': 
-
         return Token(ch);        // let each character represent itself
-
     case '.':
-
     case '0': case '1': case '2': case '3': case '4':
-
     case '5': case '6': case '7': case '8': case '9':  
-
     //Első logikai hiba, ha a 8-ast a számok típusaként használjuk, a 8-as számmal nem tudunk számolni, tehát át kell írni itt, és a többi helyen ahol hivatkoztunk rá
-
         {    
-
             cin.putback(ch);         // put digit back into the input stream
-
             double val;
-
             cin >> val;              // read a floating-point number
-
             return Token('n',val);   // let 'n' represent "a number"
-
         }
-
     default:
-
         error("Bad token");
-
+    
     }
-
+    return -1;  // 4. compile hiba. Konvenció miatt vissza kell térni valamivel, még ha nem is jut el soha ide.
 }
 
-
-
 //------------------------------------------------------------------------------
-
-
 
 Token_stream ts;        // provides get() and putback() 
 
-
-
 //------------------------------------------------------------------------------
-
-
 
 double expression();    // declaration so that primary() can call expression()
 
-
-
 //------------------------------------------------------------------------------
-
-
 
 // deal with numbers and parentheses
-
 double primary()
-
 {
-
     Token t = ts.get();
-
     switch (t.kind) {
-
     case '(':    // handle '(' expression ')'
-
         {    
-
             double d = expression();
-
             t = ts.get();
-
             if (t.kind != ')') error("')'expected"); //Harmadik compile error, lemaradt egy "
-
             return d;
-
         }
-
     case 'n':            // we use 'n' to represent a number
-
         return t.value;  // return the number's value
-
     default:
-
         error("primary expected");
-
+    
     }
-
+    return -1; //5. compile hiba. Itt is konvenció miatt vissza kell térni valamivel
 }
 
-
-
 //------------------------------------------------------------------------------
-
-
 
 // deal with *, /, and %
-
 double term()
-
 {
-
     double left = primary();
-
     Token t = ts.get();        // get the next token from token stream
-
-
 
     while(true) {
-
         switch (t.kind) {
-
         case '*':
-
             left *= primary();
-
             t = ts.get();
-
             break;
-
         case '/':
-
             {    
-
                 double d = primary();
-
                 if (d == 0) error("divide by zero");
-
                 left /= d; 
-
                 t = ts.get();
-
                 break;
-
             }
-
         default: 
-
             ts.putback(t);     // put t back into the token stream
-
             return left;
-
         }
-
     }
-
 }
 
-
-
 //------------------------------------------------------------------------------
-
-
 
 // deal with + and -
-
 double expression()
-
 {
-
     double left = term();      // read and evaluate a Term
-
     Token t = ts.get();        // get the next token from token stream
 
-
-
     while(true) {    
-
         switch(t.kind) {
-
         case '+':
-
             left += term();    // evaluate Term and add
-
             t = ts.get();
-
             break;
-
         case '-':
-
             left -= term();    // evaluate Term and subtract  //Harmadik logikai hiba, kivonásnál kivonni kell, nem összeadni
-
             t = ts.get();
-
             break;
-
         default: 
-
             ts.putback(t);     // put t back into the token stream
-
             return left;       // finally: no more + or -: return the answer
-
         }
-
     }
-
 }
 
-
-
 //------------------------------------------------------------------------------
-
 double val=0;
-
 int main()
-
 {
-
 try
-
 {
-
     cout<<"Welcome to our simple calculator. Please enter expressions using floating-point numbers \n";
-
     cout<<"The operators you can use are:(,),+,-,*,/ \n";
-
     cout<<"If you want to print now, press ; , and if you want to exit print q \n";
-
     while (cin) {
-
         Token t = ts.get();
 
-
-
-        if (t.kind == 'q') break; // 'q' for quit
-
-        if (t.kind == ';')        // ';' for "print now"
-
+        if (t.kind == 'x') break; // 'q' for quit
+        if (t.kind == '=')        // ';' for "print now"
             cout << "=" << val << '\n';
-
         else
-
             ts.putback(t);
-
         val = expression();
-
     }
-
-    keep_window_open();
-
+	keep_window_open();
 }
-
 catch (exception& e)
-
 {
-
     cerr << "error: " << e.what() << '\n'; 
-
-    keep_window_open();
-
+	keep_window_open();
     return 1;
-
 }
-
 catch (...)
-
 {
-
     cerr << "Oops: unknown exception!\n"; 
-
-    keep_window_open();
-
+	keep_window_open();
     return 2;
-
 }
-
 }
-
 //------------------------------------------------------------------------------
-message.txt
-7 KB
